@@ -1,0 +1,24 @@
+{
+  "name": "@yathendra1995/web3magic",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "publishConfig": { 
+    "registry": "https://npm.pkg.github.com/" 
+  },
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "yathendra",
+  "repository": {
+    "url": "git://github.com/YATHENDRA1995/publish_package.git"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@magic-sdk/admin": "^1.3.0",
+    "magic-sdk": "^4.2.1",
+    "web3": "^1.3.4",
+    "user": "0.0.0"
+  }
+}
