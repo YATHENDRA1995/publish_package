@@ -1,18 +1,15 @@
-import { Magic } from '@magic-sdk/admin';
+import { Magic } from 'magic-sdk';
 import Web3 from 'web3';
 
 const initialize = () => {
     const magic = new Magic("pk_test_7967AF810E630E08", {
-      network: "rinkeby"
+        network: "rinkeby"
     });
     const web3 = new Web3(magic.rpcProvider);
-  
+
     /*  Smart contract values */
     console.log({ magic });
-  }
-  
-
-let i = 0;
+}
 
 const isLoggedIn = async () => {
     return await magic.user.isLoggedIn();
@@ -49,7 +46,6 @@ const test = function () {
     console.log(`test ${++i}`);
 }
 
-
 //Get Address(string) from privateKey (string)
 function privateKeyToAddress(privateKey) {
     return web3.eth.accounts.privateKeyToAccount(privateKey).address;
@@ -57,7 +53,6 @@ function privateKeyToAddress(privateKey) {
 
 // Reusable function to perform transactions on any contract
 const transact = async (data, contractAddress) => {
-
     try {
         const gasPrice = await web3.eth.getGasPrice();
         const txCount = await web3.eth.getTransactionCount(holderAddress);
