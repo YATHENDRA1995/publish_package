@@ -1,11 +1,13 @@
 import { Magic } from 'magic-sdk';
 import Web3 from 'web3';
 
+var web3;
+var magic;
 const initialize = () => {
-    const magic = new Magic("pk_test_7967AF810E630E08", {
+    magic = new Magic("pk_test_7967AF810E630E08", {
         network: "rinkeby"
     });
-    const web3 = new Web3(magic.rpcProvider);
+    web3 = new Web3(magic.rpcProvider);
 
     /*  Smart contract values */
     console.log({ magic });
@@ -24,6 +26,7 @@ const getAddress = async () => {
 }
 
 const getEthBalance = async () => {
+    const userAddress = (await web3.eth.getAccounts())[0];
     const userBalance = web3.utils.fromWei(
         await web3.eth.getBalance(userAddress) // Balance is in wei
     );
@@ -100,3 +103,13 @@ export {
 //     // getMagic,
 //     // getWeb3
 // }
+
+// "publishConfig": {
+//     "registry": "https://npm.pkg.github.com/"
+//   },
+
+// Inside Scripts 
+
+// "repository": {
+//     "url": "git://github.com/YATHENDRA1995/publish_package.git"
+//   },
