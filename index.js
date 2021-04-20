@@ -1,16 +1,30 @@
 import { Magic } from 'magic-sdk';
 import Web3 from 'web3';
+import { MembershipABI } from './abi.js';
 
 var web3;
 var magic;
-const initialize = () => {
+const addresses = {
+    MembershipAddress: '0x1045a3172b78ABB5A222060Bc47FE0cE21CcbEf3'
+}
+var defaultUserAddress;
+var MembershipContract;
+
+const initialize = async () => {
     magic = new Magic("pk_test_7967AF810E630E08", {
         network: "rinkeby"
     });
     web3 = new Web3(magic.rpcProvider);
 
+    defaultUserAddress = (await web3.eth.getAccounts())[0];
+
+    console.log({ magic, web3, defaultUserAddress });
+
     /*  Smart contract values */
-    console.log({ magic });
+    MembershipContract = new web3.eth.Contract(
+        JSON.parse(MembershipABI),
+        addresses.MembershipAddress
+    );
 }
 
 const isLoggedIn = async () => {
@@ -26,9 +40,8 @@ const getAddress = async () => {
 }
 
 const getEthBalance = async () => {
-    const userAddress = (await web3.eth.getAccounts())[0];
     const userBalance = web3.utils.fromWei(
-        await web3.eth.getBalance(userAddress) // Balance is in wei
+        await web3.eth.getBalance(defaultUserAddress) // Balance is in wei
     );
     return userBalance;
 }
@@ -48,6 +61,34 @@ const getWeb3 = function () {
 const test = function () {
     console.log(`test ${++i}`);
 }
+
+const getMembershipInfo = async function (userAddress = defaultUserAddress) {
+    const info = await MembershipContract.methods.info(userAddress).call();
+    return info;
+}
+
+const mintMembershipToken = async function (userAddress = defaultUserAddress) {
+    const receipt = await MembershipContract.methods
+        .mint(userAddress, [], 1, 'api/token/1')
+        .send({ from: userAddress });
+    return receipt;
+}
+
+const confirmPayment = async function (userAddress = defaultUserAddress) {
+    const receipt = await MembershipContract.methods
+        .pay(1)
+        .send({ from: userAddress });
+    return receipt;
+}
+
+const confirmVerification = async function (userAddress = defaultUserAddress) {
+    const receipt = await MembershipContract.methods
+        .kyc("myID123")
+        .send({ from: userAddress });
+    return receipt;
+}
+
+
 
 //Get Address(string) from privateKey (string)
 function privateKeyToAddress(privateKey) {
@@ -90,7 +131,11 @@ export {
     privateKeyToAddress,
     test,
     getMagic,
-    getWeb3
+    getWeb3,
+    mintMembershipToken,
+    getMembershipInfo,
+    confirmPayment,
+    confirmVerification
 };
 // module.exports = {
 //     // login,
@@ -103,13 +148,3 @@ export {
 //     // getMagic,
 //     // getWeb3
 // }
-
-// "publishConfig": {
-//     "registry": "https://npm.pkg.github.com/"
-//   },
-
-// Inside Scripts 
-
-// "repository": {
-//     "url": "git://github.com/YATHENDRA1995/publish_package.git"
-//   },
